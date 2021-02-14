@@ -6,4 +6,4 @@ This is the code I wrote based on the exercises from the book [C++ Game Developm
 
 ## Sections
 
-- C++ Concepts
+- Basic Concepts
