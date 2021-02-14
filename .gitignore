@@ -12,3 +12,20 @@
 # GLM libraries
 glm/*
 */glm/*
+
+# VS files and others
+*.sln
+*.ilk
+*.log
+*.txt
+*.exe
+*.exe.recipe
+*.suo
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+*.ipch
+*.idb
+*.pdb
+*.tlog
