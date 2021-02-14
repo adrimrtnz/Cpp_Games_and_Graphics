@@ -18,6 +18,7 @@ glm/*
 *.ilk
 *.log
 *.txt
+*.txt
 *.exe
 *.exe.recipe
 *.suo
