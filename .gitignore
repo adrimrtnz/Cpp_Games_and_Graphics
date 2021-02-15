@@ -15,6 +15,7 @@ glm/*
 
 # SFML
 */2.SFML_2D/SFMLProject/SFML-2.5.1/*
+*/SFML-2.5.1/*
 
 # VS files and others
 *.sln
