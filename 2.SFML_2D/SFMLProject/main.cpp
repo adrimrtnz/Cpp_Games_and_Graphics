@@ -17,6 +17,21 @@ int main(void) {
 	rect.setPosition(viewSize.x / 2, viewSize.y / 2);
 	rect.setOrigin(sf::Vector2f(rect.getSize().x / 2, rect.getSize().y / 2));
 
+	// Draw a circle
+	sf::CircleShape circle(100);
+	circle.setFillColor(sf::Color::Green);
+	circle.setPosition(viewSize.x / 2, viewSize.y / 2);
+	circle.setOrigin(sf::Vector2f(circle.getRadius(), circle.getRadius()));
+
+	// Draw a triangle
+	sf::ConvexShape triangle;
+	triangle.setPointCount(3);
+	triangle.setPoint(0, sf::Vector2f(-100, 0));
+	triangle.setPoint(1, sf::Vector2f(0, -100));
+	triangle.setPoint(2, sf::Vector2f(100, 0));
+	triangle.setFillColor(sf::Color(128, 0, 128, 255));	// Color(Red, Green, Blue, Alpha);
+	triangle.setPosition(viewSize.x / 2, viewSize.y / 2);
+
 	// Initialize Game Object
 	while (window.isOpen()) {
 		
@@ -26,6 +41,8 @@ int main(void) {
 		window.clear(sf::Color::Red);
 		// Render Game Objects
 		window.draw(rect);
+		window.draw(circle);
+		window.draw(triangle);
 
 		window.display();
 	}
