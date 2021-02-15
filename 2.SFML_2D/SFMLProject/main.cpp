@@ -7,7 +7,7 @@ const int S_HEIGHT = 768;
 
 sf::Vector2f viewSize(S_WIDTH, S_HEIGHT);
 sf::VideoMode vm(viewSize.x, viewSize.y);
-sf::RenderWindow window(vm, "SFLM Project", sf::Style::Default);
+sf::RenderWindow window(vm, "SFLM Project!", sf::Style::Default);
 
 int main(void) {
 	
