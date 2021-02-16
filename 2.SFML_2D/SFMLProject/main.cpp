@@ -9,40 +9,33 @@ sf::Vector2f viewSize(S_WIDTH, S_HEIGHT);
 sf::VideoMode vm(viewSize.x, viewSize.y);
 sf::RenderWindow window(vm, "SFLM Project", sf::Style::Default);
 
+// Textures & Sprites
+sf::Texture skyTexture;
+sf::Sprite skySprite;
+
+
+void init() {
+
+	// Load sky Texture
+	skyTexture.loadFromFile("Assets/graphics/sky.png");
+
+	// Set and Attach a Texture to the Sprite
+	skySprite.setTexture(skyTexture);
+}
+
+void draw() {
+	window.draw(skySprite);
+}
+
 int main(void) {
-	
-	// Draw a rectangle
-	sf::RectangleShape rect(sf::Vector2f(500.f, 300.f));
-	rect.setFillColor(sf::Color::Yellow);
-	rect.setPosition(viewSize.x / 2, viewSize.y / 2);
-	rect.setOrigin(sf::Vector2f(rect.getSize().x / 2, rect.getSize().y / 2));
-
-	// Draw a circle
-	sf::CircleShape circle(100);
-	circle.setFillColor(sf::Color::Green);
-	circle.setPosition(viewSize.x / 2, viewSize.y / 2);
-	circle.setOrigin(sf::Vector2f(circle.getRadius(), circle.getRadius()));
-
-	// Draw a triangle
-	sf::ConvexShape triangle;
-	triangle.setPointCount(3);
-	triangle.setPoint(0, sf::Vector2f(-100, 0));
-	triangle.setPoint(1, sf::Vector2f(0, -100));
-	triangle.setPoint(2, sf::Vector2f(100, 0));
-	triangle.setFillColor(sf::Color(128, 0, 128, 255));	// Color(Red, Green, Blue, Alpha);
-	triangle.setPosition(viewSize.x / 2, viewSize.y / 2);
+	init();
 
 	// Initialize Game Object
 	while (window.isOpen()) {
-		
-		// Handle Keyboard Events
-		// Update Game Objects in the scene
-
 		window.clear(sf::Color::Red);
+		
 		// Render Game Objects
-		window.draw(rect);
-		window.draw(circle);
-		window.draw(triangle);
+		draw();
 
 		window.display();
 	}
