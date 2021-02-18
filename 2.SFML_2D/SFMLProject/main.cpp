@@ -17,13 +17,6 @@ sf::Sprite skySprite;
 sf::Texture bgTexture;
 sf::Sprite bgSprite;
 
-// Hero Texture & Sprite
-sf::Texture heroTexture;
-sf::Sprite heroSprite;
-
-// Player position & starting state
-sf::Vector2f playerPosition;
-bool playerMoving = false;
 
 void init() {
 
@@ -35,17 +28,12 @@ void init() {
 	bgTexture.loadFromFile("Assets/graphics/bg.png");
 	bgSprite.setTexture(bgTexture);
 
-	// Load & Attach Hero Texture
-	heroTexture.loadFromFile("Assets/graphics/hero.png");
-	heroSprite.setTexture(heroTexture);
-	heroSprite.setPosition(sf::Vector2f(viewSize.x / 2, viewSize.y / 2));
-	heroSprite.setOrigin(heroTexture.getSize().x / 2, heroTexture.getSize().y / 2);
 }
 
 void draw() {
 	window.draw(skySprite);
 	window.draw(bgSprite);
-	window.draw(heroSprite);
+
 }
 
 void updateInput() {
@@ -53,19 +41,6 @@ void updateInput() {
 	sf::Event event;
 
 	while (window.pollEvent(event))	{
-
-		if (event.type == sf::Event::KeyPressed) {
-			
-			if (event.key.code == sf::Keyboard::Right) {
-				playerMoving = true;
-			}
-		}
-
-		if (event.type == sf::Event::KeyReleased) {
-			if (event.key.code == sf::Keyboard::Right) {
-				playerMoving = false;
-			}
-		}
 
 		if (event.key.code == sf::Keyboard::Escape || event.type == sf::Event::Closed) {
 			window.close();
@@ -76,9 +51,6 @@ void updateInput() {
 
 void update(float dt) {
 
-	if (playerMoving) {
-		heroSprite.move(50.0f * dt, 0);
-	}
 }
 
 int main(void) {
@@ -86,7 +58,7 @@ int main(void) {
 	sf::Clock clock;
 	init();
 
-	// Initialize Game Object
+	// Main game loop
 	while (window.isOpen()) {
 		
 		updateInput();
@@ -96,8 +68,7 @@ int main(void) {
 		update(dt.asSeconds());
 
 		window.clear(sf::Color::Red);
-			// Render Game Objects
-			draw();
-			window.display();
+		draw();
+		window.display();
 	}
 }
