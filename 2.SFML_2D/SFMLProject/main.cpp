@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
-//#include "SFML-2.5.1/include/SFML/Graphics.hpp"
+
+#include "Hero.h"
 
 // Window Parameters
 const int S_WIDTH = 1024;
@@ -17,6 +18,9 @@ sf::Sprite skySprite;
 sf::Texture bgTexture;
 sf::Sprite bgSprite;
 
+// Hero Object
+Hero hero;
+
 
 void init() {
 
@@ -27,6 +31,9 @@ void init() {
 	// Load & Attach Background Texture
 	bgTexture.loadFromFile("Assets/graphics/bg.png");
 	bgSprite.setTexture(bgTexture);
+
+	// Load & Attach Hero Texture
+	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
 
 }
 

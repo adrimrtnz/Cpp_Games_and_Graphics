@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-//#include "SFML-2.5.1/include/SFML/Graphics.hpp"
+
+const int S_HEIGHT = 768;
 
 class Hero {
 
