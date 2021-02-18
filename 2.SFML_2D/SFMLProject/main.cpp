@@ -21,6 +21,10 @@ sf::Sprite bgSprite;
 sf::Texture heroTexture;
 sf::Sprite heroSprite;
 
+// Player position & starting state
+sf::Vector2f playerPosition;
+bool playerMoving = false;
+
 void init() {
 
 	// Load & Attach Sky Texture
@@ -50,12 +54,36 @@ void updateInput() {
 
 	while (window.pollEvent(event))	{
 
-		if (event.key.code == sf::Keyboard::Escape || event.type == sf::Event::Closed)
+		if (event.type == sf::Event::KeyPressed) {
+			
+			if (event.key.code == sf::Keyboard::Right) {
+				playerMoving = true;
+			}
+		}
+
+		if (event.type == sf::Event::KeyReleased) {
+			if (event.key.code == sf::Keyboard::Right) {
+				playerMoving = false;
+			}
+		}
+
+		if (event.key.code == sf::Keyboard::Escape || event.type == sf::Event::Closed) {
 			window.close();
+		}
+	}
+}
+
+
+void update(float dt) {
+
+	if (playerMoving) {
+		heroSprite.move(50.0f * dt, 0);
 	}
 }
 
 int main(void) {
+	
+	sf::Clock clock;
 	init();
 
 	// Initialize Game Object
@@ -63,9 +91,13 @@ int main(void) {
 		
 		updateInput();
 
+		// Update Game
+		sf::Time dt = clock.restart();
+		update(dt.asSeconds());
+
 		window.clear(sf::Color::Red);
-		// Render Game Objects
-		draw();
-		window.display();
+			// Render Game Objects
+			draw();
+			window.display();
 	}
 }
