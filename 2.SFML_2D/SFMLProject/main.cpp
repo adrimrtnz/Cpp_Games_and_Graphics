@@ -44,16 +44,28 @@ void draw() {
 	window.draw(heroSprite);
 }
 
+void updateInput() {
+	
+	sf::Event event;
+
+	while (window.pollEvent(event))	{
+
+		if (event.key.code == sf::Keyboard::Escape || event.type == sf::Event::Closed)
+			window.close();
+	}
+}
+
 int main(void) {
 	init();
 
 	// Initialize Game Object
 	while (window.isOpen()) {
-		window.clear(sf::Color::Red);
 		
+		updateInput();
+
+		window.clear(sf::Color::Red);
 		// Render Game Objects
 		draw();
-
 		window.display();
 	}
 }
