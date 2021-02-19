@@ -1,7 +1,7 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 
-const int S_HEIGHT = 768;
 
 class Hero {
 
@@ -20,6 +20,7 @@ class Hero {
 		sf::Vector2f m_position;
 
 		const float M_GRAVITY = 9.81f;
+		const int S_HEIGHT = 768;
 		int jumpCount = 0;
 		float m_mass;
 		float m_velocity;
