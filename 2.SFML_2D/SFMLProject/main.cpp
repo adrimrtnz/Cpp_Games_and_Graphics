@@ -40,7 +40,7 @@ void init() {
 void draw() {
 	window.draw(skySprite);
 	window.draw(bgSprite);
-
+	window.draw(hero.getSprite());
 }
 
 void updateInput() {
@@ -48,6 +48,12 @@ void updateInput() {
 	sf::Event event;
 
 	while (window.pollEvent(event))	{
+
+		if (event.type == sf::Event::KeyPressed) {
+			if (event.key.code == sf::Keyboard::Up) {
+				hero.jump(750.0f);
+			}
+		}
 
 		if (event.key.code == sf::Keyboard::Escape || event.type == sf::Event::Closed) {
 			window.close();
@@ -57,7 +63,7 @@ void updateInput() {
 
 
 void update(float dt) {
-
+	hero.update(dt);
 }
 
 int main(void) {
