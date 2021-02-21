@@ -87,6 +87,19 @@ void update(float dt) {
 		spawnEnemy();
 		currentTime = 0.0f;
 	}
+
+	// Update Enemies
+	for (int i = 0; i < enemies.size(); i++) {
+		
+		Enemy* enemy = enemies[i];
+		enemy->update(dt);
+
+		if (enemy->getSprite().getPosition().x < 0) {
+			enemies.erase(enemies.begin() + i);
+			delete(enemy);
+		}
+
+	}
 }
 
 int main(void) {
