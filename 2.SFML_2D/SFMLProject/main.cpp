@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Hero.h"
+#include "Enemy.h"
 
 // Window Parameters
 const int S_WIDTH = 1024;
@@ -20,6 +21,7 @@ sf::Sprite bgSprite;
 
 // Hero Object
 Hero hero;
+const float JUMP_FORCE = 750.0f;
 
 
 void init() {
@@ -51,7 +53,7 @@ void updateInput() {
 
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Up) {
-				hero.jump(750.0f);
+				hero.jump(JUMP_FORCE);
 			}
 		}
 
