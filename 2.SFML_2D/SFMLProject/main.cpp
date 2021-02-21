@@ -27,7 +27,10 @@ const float JUMP_FORCE = 750.0f;
 // Enemy Objects
 std::vector<Enemy*> enemies;
 void spawnEnemy();
-int enemySpeed[] = {-400, -500, -600};
+int enemySpeed[] = {-400, -500, -600};  /* Speed will depend on Enemy's spawn position */
+float spawnTime = 1.125f;
+
+float currentTime = 0.0f;
 
 
 void init() {
@@ -46,15 +49,14 @@ void init() {
 	// Load & Attach Hero Texture
 	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
 
-	// Load & Attach Enemy Texture
-
-
 }
 
 void draw() {
 	window.draw(skySprite);
 	window.draw(bgSprite);
 	window.draw(hero.getSprite());
+
+	for (Enemy* enemy : enemies) { window.draw(enemy->getSprite()); }
 }
 
 void updateInput() {
@@ -78,6 +80,13 @@ void updateInput() {
 
 void update(float dt) {
 	hero.update(dt);
+	
+	currentTime += dt;
+	// Spawn Enemies
+	if (currentTime >= spawnTime) {
+		spawnEnemy();
+		currentTime = 0.0f;
+	}
 }
 
 int main(void) {
@@ -125,5 +134,10 @@ void spawnEnemy() {
 		printf("Incorrect 'y' value\n");
 		return;
 	}
+
+	Enemy* enemy = new Enemy();
+	enemy->init("Assets/graphics/enemy.png", enemyPos, speed);
+
+	enemies.push_back(enemy);
 
 }
