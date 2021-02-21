@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 #include "Hero.h"
 #include "Enemy.h"
@@ -23,8 +24,16 @@ sf::Sprite bgSprite;
 Hero hero;
 const float JUMP_FORCE = 750.0f;
 
+// Enemy Objects
+std::vector<Enemy*> enemies;
+void spawnEnemy();
+int enemySpeed[] = {-400, -500, -600};
+
 
 void init() {
+
+	// Randomness is needed to the Enemy's spawn position
+	srand((int)time(0));
 
 	// Load & Attach Sky Texture
 	skyTexture.loadFromFile("Assets/graphics/sky.png");
@@ -36,6 +45,9 @@ void init() {
 
 	// Load & Attach Hero Texture
 	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
+
+	// Load & Attach Enemy Texture
+
 
 }
 
@@ -86,4 +98,32 @@ int main(void) {
 		draw();
 		window.display();
 	}
+}
+
+void spawnEnemy() {
+
+	// Generate a random number between 0 and 2
+	int randLoc = rand() % 3;
+
+	sf::Vector2f enemyPos;
+	float speed = enemySpeed[randLoc];
+
+	switch (randLoc) {
+	case 0:
+		enemyPos = sf::Vector2f(viewSize.x, viewSize.y * 0.75f);
+		break;
+		
+	case 1:
+		enemyPos = sf::Vector2f(viewSize.x, viewSize.y * 0.60f);
+		break;
+
+	case 2:
+		enemyPos = sf::Vector2f(viewSize.x, viewSize.y * 0.40f);
+		break;
+
+	default:
+		printf("Incorrect 'y' value\n");
+		return;
+	}
+
 }
