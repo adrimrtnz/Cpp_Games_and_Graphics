@@ -10,7 +10,10 @@ sf::RenderWindow window(vm, "FlappyClone", sf::Style::Default);
 
 int main(void)
 {
-	while (window.isOpen() {
+	while (window.isOpen()) {
+
+		window.clear(sf::Color(0,0,128,255));
+		window.display();
 
 	}
 }
