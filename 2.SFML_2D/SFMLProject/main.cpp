@@ -34,12 +34,20 @@ float spawnTime = 1.125f;
 
 float currentTime = 0.0f;
 
+int score = 0;
+bool gameover = true;
+
+// Text Object
+sf::Font headingFont;
+sf::Text headingText;
+
 // Rocket Objects
 std::vector<Rocket*> rockets;
 void updateRockets(float dt);
 void shoot();
 
 bool isColliding(sf::Sprite sprite1, sf::Sprite sprite2);
+void reset();
 
 
 void init() {
@@ -55,6 +63,16 @@ void init() {
 	bgTexture.loadFromFile("Assets/graphics/bg.png");
 	bgSprite.setTexture(bgTexture);
 
+	// Load & Set Heading Text
+	headingFont.loadFromFile("Assets/fonts/Funny.ttf");
+	headingText.setFont(headingFont);
+	headingText.setString("Tiny Bazooka");
+	headingText.setCharacterSize(85);
+	headingText.setFillColor(sf::Color::Red);
+	sf::FloatRect headingBounds = headingText.getLocalBounds();
+	headingText.setOrigin(headingBounds.width / 2, headingBounds.height / 2);
+	headingText.setPosition(sf::Vector2f(viewSize.x * 0.5f, viewSize.y * 0.10f));
+
 	// Load & Attach Hero Texture
 	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
 
@@ -64,6 +82,10 @@ void draw() {
 	window.draw(skySprite);
 	window.draw(bgSprite);
 	window.draw(hero.getSprite());
+
+	if (gameover) {
+		window.draw(headingText);
+	}
 
 	for (Enemy* enemy : enemies) { window.draw(enemy->getSprite()); }
 	for (Rocket* rocket : rockets) { window.draw(rocket->getSprite()); }
@@ -84,7 +106,15 @@ void updateInput() {
 		if (event.key.code == sf::Keyboard::Escape || event.type == sf::Event::Closed) {
 			window.close();
 		}
-		if (event.key.code == sf::Keyboard::Down) { shoot(); }
+		if (event.key.code == sf::Keyboard::Down) { 
+			if (!gameover) {
+				shoot();
+			}
+			else {
+				gameover = false;
+				reset();
+			}
+		}
 	}
 }
 
@@ -112,6 +142,9 @@ void update(float dt) {
 			Enemy* enemy = enemies[j];
 
 			if (isColliding(rocket->getSprite(), enemy->getSprite())) {
+				
+				score++;
+				
 				rockets.erase(rockets.begin() + i);
 				enemies.erase(enemies.begin() + j);
 
@@ -137,8 +170,10 @@ int main(void) {
 
 		// Update Game
 		sf::Time dt = clock.restart();
-		update(dt.asSeconds());
-
+		if (!gameover) {
+			update(dt.asSeconds());
+		}
+			
 		window.clear(sf::Color::Red);
 		draw();
 		window.display();
@@ -187,6 +222,7 @@ void updateEnemies(float dt) {
 		if (enemy->getSprite().getPosition().x < 0) {
 			enemies.erase(enemies.begin() + i);
 			delete(enemy);
+			gameover = true;
 		}
 
 	}
@@ -220,4 +256,17 @@ bool isColliding(sf::Sprite sprite1, sf::Sprite sprite2) {
 
 	if (shape1.intersects(shape2)) { return true; }
 	return false;
+}
+
+void reset() {
+
+	score = 0;
+	currentTime = 0.0f;
+
+	for (Enemy* enemy : enemies) { delete(enemy); }
+	for (Rocket* rocket : rockets) { delete(rocket); }
+
+	enemies.clear();
+	rockets.clear();
+
 }
