@@ -3,6 +3,7 @@
 
 #include "Hero.h"
 #include "Enemy.h"
+#include "Rocket.h"
 
 // Window Parameters
 const int S_WIDTH = 1024;
@@ -27,10 +28,16 @@ const float JUMP_FORCE = 750.0f;
 // Enemy Objects
 std::vector<Enemy*> enemies;
 void spawnEnemy();
+void updateEnemies(float dt);
 int enemySpeed[] = {-400, -500, -600};  /* Speed will depend on Enemy's spawn position */
 float spawnTime = 1.125f;
 
 float currentTime = 0.0f;
+
+// Rocket Objects
+std::vector<Rocket*> rockets;
+void updateRockets(float dt);
+void shoot();
 
 
 void init() {
@@ -57,6 +64,7 @@ void draw() {
 	window.draw(hero.getSprite());
 
 	for (Enemy* enemy : enemies) { window.draw(enemy->getSprite()); }
+	for (Rocket* rocket : rockets) { window.draw(rocket->getSprite()); }
 }
 
 void updateInput() {
@@ -74,6 +82,7 @@ void updateInput() {
 		if (event.key.code == sf::Keyboard::Escape || event.type == sf::Event::Closed) {
 			window.close();
 		}
+		if (event.key.code == sf::Keyboard::Down) { shoot(); }
 	}
 }
 
@@ -89,17 +98,10 @@ void update(float dt) {
 	}
 
 	// Update Enemies
-	for (int i = 0; i < enemies.size(); i++) {
-		
-		Enemy* enemy = enemies[i];
-		enemy->update(dt);
+	updateEnemies(dt);
 
-		if (enemy->getSprite().getPosition().x < 0) {
-			enemies.erase(enemies.begin() + i);
-			delete(enemy);
-		}
-
-	}
+	// Update Rockets
+	updateRockets(dt);
 }
 
 int main(void) {
@@ -153,4 +155,39 @@ void spawnEnemy() {
 
 	enemies.push_back(enemy);
 
+}
+
+void updateEnemies(float dt) {
+	for (int i = 0; i < enemies.size(); i++) {
+
+		Enemy* enemy = enemies[i];
+		enemy->update(dt);
+
+		if (enemy->getSprite().getPosition().x < 0) {
+			enemies.erase(enemies.begin() + i);
+			delete(enemy);
+		}
+
+	}
+}
+
+void shoot() {
+	
+	Rocket* rocket = new Rocket();
+
+	rocket->init("Assets/graphics/rocket.png", hero.getSprite().getPosition(), 400.0f);
+	rockets.push_back(rocket);
+}
+
+void updateRockets(float dt) {
+	for (int i = 0; i < rockets.size(); i++) {
+
+		Rocket* rocket = rockets[i];
+		rocket->update(dt);
+
+		if (rocket->getSprite().getPosition().x > viewSize.x) {
+			rockets.erase(rockets.begin() + i);
+			delete(rocket);
+		}
+	}
 }
