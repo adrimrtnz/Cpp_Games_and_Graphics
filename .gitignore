@@ -17,6 +17,8 @@ glm/*
 /2.SFML_2D/SFMLProject/SFML-2.5.1/*
 /2.SFML_2D/SFMLProject/Assets/*
 */SFML-2.5.1/*
+/4.Extras/FlappyClone/SFML-2.5.1/*
+/4.Extras/FlappyClone/Assets/*
 
 # VS files and others
 *.sln
