@@ -42,6 +42,7 @@ void updateScore(int score);
 sf::Font headingFont;
 sf::Text headingText;
 sf::Text scoreText;
+sf::Text tutorialText;
 
 // Rocket Objects
 std::vector<Rocket*> rockets;
@@ -82,6 +83,16 @@ void init() {
 	scoreText.setFillColor(sf::Color::Red);
 	updateScore(score);
 
+	// Tutorial Text
+	tutorialText.setFont(headingFont);
+	tutorialText.setString("Press Down Arrow to Fire and Start Game, Up Arrow to Jump");
+	tutorialText.setCharacterSize(35);
+	tutorialText.setFillColor(sf::Color::Red);
+
+	sf::FloatRect tutorialBounds = tutorialText.getLocalBounds();
+	tutorialText.setOrigin(tutorialBounds.width / 2, tutorialBounds.height / 2);
+	tutorialText.setPosition(sf::Vector2f(viewSize.x * 0.5f, viewSize.y * 0.2f));
+
 	// Load & Attach Hero Texture
 	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
 
@@ -94,6 +105,7 @@ void draw() {
 
 	if (gameover) {
 		window.draw(headingText);
+		window.draw(tutorialText);
 	}
 	else {
 		window.draw(scoreText);
