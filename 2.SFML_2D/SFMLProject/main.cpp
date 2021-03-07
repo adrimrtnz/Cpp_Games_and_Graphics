@@ -78,16 +78,9 @@ void init() {
 
 	// Score Text
 	scoreText.setFont(headingFont);
-	updateScore(score);
 	scoreText.setCharacterSize(45);
 	scoreText.setFillColor(sf::Color::Red);
-
-	sf::FloatRect scoreBounds = scoreText.getLocalBounds();
-	scoreText.setOrigin(scoreBounds.width / 2, scoreBounds.height / 2);
-	scoreText.setPosition(sf::Vector2f(viewSize.x * 0.5f, viewSize.y * 0.10f));
-
-	// Score Text
-
+	updateScore(score);
 
 	// Load & Attach Hero Texture
 	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
@@ -162,8 +155,7 @@ void update(float dt) {
 
 			if (isColliding(rocket->getSprite(), enemy->getSprite())) {
 				
-				score++;
-				updateScore(score);
+				updateScore(++score);
 				
 				rockets.erase(rockets.begin() + i);
 				enemies.erase(enemies.begin() + j);
