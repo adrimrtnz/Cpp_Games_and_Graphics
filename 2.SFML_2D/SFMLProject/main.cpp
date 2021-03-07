@@ -36,10 +36,12 @@ float currentTime = 0.0f;
 
 int score = 0;
 bool gameover = true;
+void updateScore(int score);
 
 // Text Object
 sf::Font headingFont;
 sf::Text headingText;
+sf::Text scoreText;
 
 // Rocket Objects
 std::vector<Rocket*> rockets;
@@ -64,14 +66,28 @@ void init() {
 	bgSprite.setTexture(bgTexture);
 
 	// Load & Set Heading Text
-	headingFont.loadFromFile("Assets/fonts/Funny.ttf");
+	headingFont.loadFromFile("Assets/fonts/TimKid.ttf");
 	headingText.setFont(headingFont);
 	headingText.setString("Tiny Bazooka");
 	headingText.setCharacterSize(85);
 	headingText.setFillColor(sf::Color::Red);
+
 	sf::FloatRect headingBounds = headingText.getLocalBounds();
 	headingText.setOrigin(headingBounds.width / 2, headingBounds.height / 2);
 	headingText.setPosition(sf::Vector2f(viewSize.x * 0.5f, viewSize.y * 0.10f));
+
+	// Score Text
+	scoreText.setFont(headingFont);
+	updateScore(score);
+	scoreText.setCharacterSize(45);
+	scoreText.setFillColor(sf::Color::Red);
+
+	sf::FloatRect scoreBounds = scoreText.getLocalBounds();
+	scoreText.setOrigin(scoreBounds.width / 2, scoreBounds.height / 2);
+	scoreText.setPosition(sf::Vector2f(viewSize.x * 0.5f, viewSize.y * 0.10f));
+
+	// Score Text
+
 
 	// Load & Attach Hero Texture
 	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
@@ -85,6 +101,9 @@ void draw() {
 
 	if (gameover) {
 		window.draw(headingText);
+	}
+	else {
+		window.draw(scoreText);
 	}
 
 	for (Enemy* enemy : enemies) { window.draw(enemy->getSprite()); }
@@ -144,6 +163,7 @@ void update(float dt) {
 			if (isColliding(rocket->getSprite(), enemy->getSprite())) {
 				
 				score++;
+				updateScore(score);
 				
 				rockets.erase(rockets.begin() + i);
 				enemies.erase(enemies.begin() + j);
@@ -249,6 +269,15 @@ void updateRockets(float dt) {
 	}
 }
 
+void updateScore(int score) {
+	
+	std::string finalScore = "Score: " + std::to_string(score);
+	scoreText.setString(finalScore);
+	sf::FloatRect scoreBounds = scoreText.getLocalBounds();
+	scoreText.setOrigin(scoreBounds.width / 2, scoreBounds.height / 2);
+	scoreText.setPosition(sf::Vector2f(viewSize.x * 0.5f, viewSize.y * 0.10f));
+}
+
 bool isColliding(sf::Sprite sprite1, sf::Sprite sprite2) {
 
 	sf::FloatRect shape1 = sprite1.getGlobalBounds();
@@ -261,6 +290,7 @@ bool isColliding(sf::Sprite sprite1, sf::Sprite sprite2) {
 void reset() {
 
 	score = 0;
+	updateScore(score);
 	currentTime = 0.0f;
 
 	for (Enemy* enemy : enemies) { delete(enemy); }
