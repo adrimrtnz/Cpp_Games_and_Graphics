@@ -13,6 +13,10 @@
 glm/*
 */glm/*
 
+# OpenGL libraries
+glfw-3.3.3/*
+glew-2.1.0/*
+
 # SFML
 /2.SFML_2D/SFMLProject/SFML-2.5.1/*
 /2.SFML_2D/SFMLProject/Assets/*
