@@ -28,7 +28,8 @@ void Hero::init(std::string textureName, int frameCount, float animDuration, sf:
 void Hero::update(float dt) {
 
 	// Animate Sprite
-
+	m_elapsedTime += dt;
+	int animFrame = static_cast<int> ((m_elapsedTime / m_animDuration) * m_frameCount) % m_frameCount;
 
 	m_velocity -= m_mass * M_GRAVITY * dt;
 	m_position.y -= m_velocity * dt;
