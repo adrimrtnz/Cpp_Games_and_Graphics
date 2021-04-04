@@ -8,3 +8,8 @@ This is the code I wrote based on the exercises from the book [C++ Game Developm
 
 - Basic Concepts
 - SFML 2D
+
+## Credits
+I did not use the original audio assets. Most of the SFX were created with Bfxr, some other were downloaded from [pengameart.org](https://opengameart.org/).
+
+The background music from the SFML proyect is composed by [Juhani Junkala.](https://opengameart.org/content/5-chiptunes-action)
