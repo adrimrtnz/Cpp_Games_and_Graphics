@@ -109,7 +109,7 @@ void init() {
 	tutorialText.setPosition(sf::Vector2f(viewSize.x * 0.5f, viewSize.y * 0.2f));
 
 	// Load & Attach Hero Texture
-	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
+	hero.init("Assets/graphics/heroAnim.png", 4, 1.0f, sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
 
 }
 
@@ -273,7 +273,7 @@ void shoot() {
 	
 	Rocket* rocket = new Rocket();
 
-	rocket->init("Assets/graphics/rocket.png", hero.getSprite().getPosition(), 400.0f);
+	rocket->init("Assets/graphics/rocket.png", sf::Vector2f(hero.getSprite().getPosition().x - 140, hero.getSprite().getPosition().y), 400.0f);
 	rockets.push_back(rocket);
 	fireSound.play();
 }

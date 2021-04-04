@@ -19,7 +19,7 @@ void Hero::init(std::string textureName, int frameCount, float animDuration, sf:
 
 	// Create Sprite and Attach the Texture
 	m_sprite.setTexture(m_texture);
-	m_sprite.setTextureRect(sf::IntRect(0, 0, m_spriteSize.x, m_spriteSize.y);
+	m_sprite.setTextureRect(sf::IntRect(0, 0, m_spriteSize.x, m_spriteSize.y));
 	m_sprite.setPosition(m_position);
 	m_sprite.setOrigin(m_texture.getSize().x / 2, m_texture.getSize().y / 2);
 
@@ -30,7 +30,9 @@ void Hero::update(float dt) {
 	// Animate Sprite
 	m_elapsedTime += dt;
 	int animFrame = static_cast<int> ((m_elapsedTime / m_animDuration) * m_frameCount) % m_frameCount;
+	m_sprite.setTextureRect(sf::IntRect(animFrame * m_spriteSize.x, 0, m_spriteSize.x, m_spriteSize.y));
 
+	// Update Position
 	m_velocity -= m_mass * M_GRAVITY * dt;
 	m_position.y -= m_velocity * dt;
 	m_sprite.setPosition(m_position);
