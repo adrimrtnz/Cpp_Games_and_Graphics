@@ -273,7 +273,7 @@ void shoot() {
 	
 	Rocket* rocket = new Rocket();
 
-	rocket->init("Assets/graphics/rocket.png", hero.getSprite().getPosition(), 400.0f);
+	rocket->init("Assets/graphics/rocket.png", sf::Vector2f(hero.getSprite().getPosition().x -130, hero.getSprite().getPosition().y), 400.0f);
 	rockets.push_back(rocket);
 	fireSound.play();
 }
