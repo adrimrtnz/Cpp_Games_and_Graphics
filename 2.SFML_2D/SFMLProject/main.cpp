@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
 
 #include "Hero.h"
@@ -44,6 +45,11 @@ sf::Text headingText;
 sf::Text scoreText;
 sf::Text tutorialText;
 
+// Music & SFX Object
+sf::Music bgMusic;
+sf::SoundBuffer fireBuffer, hitBuffer, jumpBuffer;
+sf::Sound fireSound(fireBuffer), hitSound(hitBuffer), jumpSound(jumpBuffer);
+
 // Rocket Objects
 std::vector<Rocket*> rockets;
 void updateRockets(float dt);
@@ -57,6 +63,15 @@ void init() {
 
 	// Randomness is needed to the Enemy's spawn position
 	srand((int)time(0));
+
+	//Audio
+	bgMusic.openFromFile("Assets/audio/bgMusic.wav");
+	bgMusic.play();
+	//bgMusic.setVolume(50);	// Uncomment if you want to change the background music volume
+
+	hitBuffer.loadFromFile("Assets/audio/hit.wav");
+	fireBuffer.loadFromFile("Assets/audio/fire.wav");
+	jumpBuffer.loadFromFile("Assets/audio/jump.wav");
 
 	// Load & Attach Sky Texture
 	skyTexture.loadFromFile("Assets/graphics/sky.png");
@@ -124,6 +139,7 @@ void updateInput() {
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Up) {
 				hero.jump(JUMP_FORCE);
+				jumpSound.play();
 			}
 		}
 
@@ -167,6 +183,7 @@ void update(float dt) {
 
 			if (isColliding(rocket->getSprite(), enemy->getSprite())) {
 				
+				hitSound.play();
 				updateScore(++score);
 				
 				rockets.erase(rockets.begin() + i);
@@ -258,6 +275,7 @@ void shoot() {
 
 	rocket->init("Assets/graphics/rocket.png", hero.getSprite().getPosition(), 400.0f);
 	rockets.push_back(rocket);
+	fireSound.play();
 }
 
 void updateRockets(float dt) {
