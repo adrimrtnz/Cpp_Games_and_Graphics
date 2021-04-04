@@ -109,7 +109,7 @@ void init() {
 	tutorialText.setPosition(sf::Vector2f(viewSize.x * 0.5f, viewSize.y * 0.2f));
 
 	// Load & Attach Hero Texture
-	hero.init("Assets/graphics/hero.png", sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
+	hero.init("Assets/graphics/heroAnim.png", 4, 1.0f, sf::Vector2f(viewSize.x * 0.25f, viewSize.y * 0.5f), 200);
 
 }
 
