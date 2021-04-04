@@ -27,6 +27,9 @@ void Hero::init(std::string textureName, int frameCount, float animDuration, sf:
 
 void Hero::update(float dt) {
 
+	// Animate Sprite
+
+
 	m_velocity -= m_mass * M_GRAVITY * dt;
 	m_position.y -= m_velocity * dt;
 	m_sprite.setPosition(m_position);
