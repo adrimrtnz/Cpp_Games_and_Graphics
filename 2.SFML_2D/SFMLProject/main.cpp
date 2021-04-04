@@ -67,7 +67,7 @@ void init() {
 	//Audio
 	bgMusic.openFromFile("Assets/audio/bgMusic.wav");
 	bgMusic.play();
-	//bgMusic.setVolume(50);	// Uncomment if you want to change the background music volume
+	//bgMusic.setVolume(50);	/* Uncomment if you want to change the background music volume. The value is between 0 and 100. */
 
 	hitBuffer.loadFromFile("Assets/audio/hit.wav");
 	fireBuffer.loadFromFile("Assets/audio/fire.wav");
