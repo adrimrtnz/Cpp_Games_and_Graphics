@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 
 		// render the scene
 		renderScene();
-		glfwSwapBuffers(window);				// the display buffer is where the current frame is rendered and stored
+		glfwSwapBuffers(window);			// the display buffer is where the current frame is rendered and stored
 		glfwPollEvents();
 
 	}
