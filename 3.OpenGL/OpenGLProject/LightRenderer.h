@@ -11,7 +11,7 @@
 class LightRenderer {
 
 public:
-	LightRenderer(MeshType, meshType, Camera* camera);
+	LightRenderer(MeshType meshType, Camera* camera);
 	~LightRenderer();
 
 	void draw();
