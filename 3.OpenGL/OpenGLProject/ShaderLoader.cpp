@@ -1,6 +1,5 @@
 #include "ShaderLoader.h"
 
-#include <iostream>
 #include <fstream>
 #include <vector>
 
@@ -38,7 +37,7 @@ GLuint ShaderLoader::createShader(GLenum shaderType, std::string source, const c
 	if (compile_result == GL_FALSE) {
 
 		int info_log_length = 0;
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH), &info_log_length);
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> shader_log(info_log_length);
 		glGetShaderInfoLog(shader, info_log_length, NULL, &shader_log[0]);
 		std::cout << "ERROR compiling shader: " << shaderName << std::endl << &shader_log[0] << std::endl;	// shader_log will detail the compilation error
@@ -49,7 +48,7 @@ GLuint ShaderLoader::createShader(GLenum shaderType, std::string source, const c
 	return shader;
 }
 
-GLuint ShaderLoader::CreateProgram(const char* vertexShaderFilename, const char* fragmentShaderFilename) {
+GLuint ShaderLoader::createProgram(const char* vertexShaderFilename, const char* fragmentShaderFilename) {
 	std::string vertex_shader_code = readShader(vertexShaderFilename);
 	std::string fragment_shader_code = readShader(fragmentShaderFilename);
 

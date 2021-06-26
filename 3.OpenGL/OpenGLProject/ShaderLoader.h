@@ -1,11 +1,12 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <iostream>
 
 class ShaderLoader {
 
 public:
-	GLuint CreateProgram(const char* vertexShaderFilename, const char* fragmentShaderFilename);
+	GLuint createProgram(const char* vertexShaderFilename, const char* fragmentShaderFilename);
 
 private:
 	std::string readShader(const char* filename);

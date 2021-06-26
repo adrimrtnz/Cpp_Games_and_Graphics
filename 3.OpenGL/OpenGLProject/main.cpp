@@ -1,11 +1,21 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+
+// custom classes
+#include "ShaderLoader.h"
+#include "Camera.h"
+#include "LightRenderer.h"
+
+Camera* camera;
+LightRenderer* light;
+
 const int WIDTH = 800;
 const int HEIGTH = 600;
 
 // functions prototypes
 void renderScene();
+void initGame();
 
 int main(int argc, char** argv) {
 	
@@ -28,6 +38,14 @@ int main(int argc, char** argv) {
 	glfwTerminate();
 
 	return 0;
+}
+
+void initGame() {
+	glEnable(GL_DEPTH_TEST);
+
+	ShaderLoader shader;
+
+	GLuint flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
 }
 
 void renderScene() {
