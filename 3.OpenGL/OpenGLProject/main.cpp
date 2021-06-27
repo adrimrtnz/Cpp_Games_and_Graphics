@@ -25,6 +25,7 @@ static void glfwError(int id, const char* description);
 int main(int argc, char** argv) {
 	
 	glfwSetErrorCallback(&glfwError);
+
 	glfwInit();
 
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGTH, "OpenGL first steps", NULL, NULL);
@@ -54,6 +55,7 @@ int main(int argc, char** argv) {
 }
 
 void initGame() {
+
 	glEnable(GL_DEPTH_TEST);
 
 	ShaderLoader shader;

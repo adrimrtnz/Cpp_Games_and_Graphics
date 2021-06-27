@@ -1,6 +1,7 @@
 #include "LightRenderer.h"
 
 LightRenderer::LightRenderer(MeshType meshType, Camera* camera) {
+	
 	this->camera = camera;
 
 	switch (meshType) {
@@ -60,6 +61,7 @@ void LightRenderer::draw() {
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
 	glBindVertexArray(0);
 	glUseProgram(0);
 }

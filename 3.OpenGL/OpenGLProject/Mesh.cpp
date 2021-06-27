@@ -135,7 +135,9 @@ void Mesh::setCubeData(std::vector<Vertex>& vertices, std::vector<uint32_t>& ind
 	};
 
 
-	vertices.clear(); indices.clear();
+	vertices.clear(); 
+	indices.clear();
+
 	vertices = _vertices;
 	indices = _indices;
 }
