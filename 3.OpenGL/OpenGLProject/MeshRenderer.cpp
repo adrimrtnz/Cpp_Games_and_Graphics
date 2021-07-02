@@ -27,7 +27,7 @@ MeshRenderer::MeshRenderer(MeshType modelType, Camera* _camera) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Vertex::textCoords);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Vertex::textCoords)));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -39,7 +39,7 @@ void MeshRenderer::draw() {
 	glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0f), position);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
 
-	modelMatrix = glm:mat4(1.0f);
+	modelMatrix = glm::mat4(1.0f);
 	modelMatrix = TranslationMatrix * scaleMatrix;
 
 	glm::mat4 vp = camera->getProjectionMatrix() * camera->getViewMatrix();
@@ -49,8 +49,7 @@ void MeshRenderer::draw() {
 	glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(vp));
 
 	GLint modelLoc = glGetUniformLocation(program, "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE);
-	glm::value_ptr(modelMatrix);
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
 	// texture binding: 1st parameter = 2d texture, 2nd parameter = texture ID
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -66,4 +65,4 @@ void MeshRenderer::draw() {
 void MeshRenderer::setTexture(GLuint textureID) { texture = textureID; }
 void MeshRenderer::setScale(glm::vec3 _scale) { this->scale = _scale; }
 void MeshRenderer::setPosition(glm::vec3 _position) { this->position = _position; }
-void MeshRenderer::setProgram(GLuint _program) { this->setProgram = program; }
+void MeshRenderer::setProgram(GLuint _program) { this->program = _program; }

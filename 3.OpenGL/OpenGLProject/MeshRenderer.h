@@ -32,6 +32,6 @@ private:
 	Camera* camera;
 
 	glm::vec3 position, scale;
-	Gluint vao, vbo, ebo, texture, program;
+	GLuint vao, vbo, ebo, texture, program;
 };
 

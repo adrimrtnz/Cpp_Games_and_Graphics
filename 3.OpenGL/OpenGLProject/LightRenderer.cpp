@@ -71,8 +71,8 @@ LightRenderer::~LightRenderer() {}
 // class setters
 void LightRenderer::setPosition(glm::vec3 _position) { this->position = _position; }
 void LightRenderer::setColor(glm::vec3 _color) { this->color = _color; }
-void LightRenderer::setProgram(GLuint _program) { this->program = program; }
+void LightRenderer::setProgram(GLuint _program) { this->program = _program; }
 
 // class getters
-glm::vec3 LightRenderer::getPosition() { return this->position; }
-glm::vec3 LightRenderer::getColor() { return this->color; }
+glm::vec3 LightRenderer::getPosition() { return position; }
+glm::vec3 LightRenderer::getColor() { return color; }
