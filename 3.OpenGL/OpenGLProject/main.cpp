@@ -88,7 +88,7 @@ void initGame() {
 void renderScene() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// This function clears the buffer
-	glClearColor(104/255.0, 254/255.0, 183/255.0, 1.0);	// RGBA between 0.0 and 1.0
+	glClearColor(38/255.0, 38/255.0, 39/255.0, 1.0);	// RGBA between 0.0 and 1.0
 
 	// Draw game objects here
 	//light->draw();
