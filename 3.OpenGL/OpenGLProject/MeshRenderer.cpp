@@ -21,6 +21,41 @@ MeshRenderer::MeshRenderer(MeshType modelType, Camera* _camera) {
 
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Gluint) * indices.size(), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Vertex::textCoords);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void MeshRenderer::draw() {
+	glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0f), position);
+	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
+
+	modelMatrix = glm:mat4(1.0f);
+	modelMatrix = TranslationMatrix * scaleMatrix;
+
+	glm::mat4 vp = camera->getProjectionMatrix() * camera->getViewMatrix();
+
+	glUseProgram(this->program);
+	GLint vpLoc = glGetUniformLocation(program, "vp");
+	glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(vp));
+
+	GLint modelLoc = glGetUniformLocation(program, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE);
+	glm::value_ptr(modelMatrix);
+
+	// texture binding: 1st parameter = 2d texture, 2nd parameter = texture ID
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// vao binding and draws the object
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
+	glBindVertexArray(0);
 }
