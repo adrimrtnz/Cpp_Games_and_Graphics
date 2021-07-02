@@ -6,9 +6,13 @@
 #include "ShaderLoader.h"
 #include "Camera.h"
 #include "LightRenderer.h"
+#include "MeshRenderer.h"
+#include "TextureLoader.h"
 
 Camera* camera;
 LightRenderer* light;
+
+MeshRenderer* sphere;
 
 // camera and screen attributes
 const int WIDTH = 800;
@@ -59,12 +63,26 @@ void initGame() {
 	glEnable(GL_DEPTH_TEST);
 
 	ShaderLoader shader;
-	GLuint flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
 
-	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 4.0f, 6.0f));
+	GLuint flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
+	GLuint texturedShaderProgram = shader.createProgram("Assets/Shaders/TexturedModel.vs", "Assets/Shaders/TexturedModel.fs");
+	
+	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 0.0f, 4.0f));
+	
 	light = new LightRenderer(MeshType::kCube, camera);
 	light->setProgram(flatShaderProgram);
 	light->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	TextureLoader tLoader;
+
+	GLuint sphereTexture = tLoader.getTextureID("Assets/Textures/tennisBall.jpg");
+
+	// sphere Mesh
+	sphere = new MeshRenderer(MeshType::kSphere, camera);
+	sphere->setProgram(texturedShaderProgram);
+	sphere->setTexture(sphereTexture);
+	sphere->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	sphere->setScale(glm::vec3(1.0f));
 }
 
 void renderScene() {
@@ -73,7 +91,8 @@ void renderScene() {
 	glClearColor(104/255.0, 254/255.0, 183/255.0, 1.0);	// RGBA between 0.0 and 1.0
 
 	// Draw game objects here
-	light->draw();
+	//light->draw();
+	sphere->draw();
 }
 
 static void glfwError(int id, const char* description) {

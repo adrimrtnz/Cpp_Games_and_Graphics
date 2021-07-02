@@ -1,7 +1,9 @@
 #include "MeshRenderer.h"
 
 MeshRenderer::MeshRenderer(MeshType modelType, Camera* _camera) {
+	
 	camera = _camera;
+
 	scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	position = glm::vec3(0.0, 0.0, 0.0);
 
@@ -36,6 +38,7 @@ MeshRenderer::MeshRenderer(MeshType modelType, Camera* _camera) {
 MeshRenderer::~MeshRenderer() {}
 
 void MeshRenderer::draw() {
+
 	glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0f), position);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
 

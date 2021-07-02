@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-#define PI 3.14f
+#define PI 3.14
 
 void Mesh::setTriData(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices) {
 

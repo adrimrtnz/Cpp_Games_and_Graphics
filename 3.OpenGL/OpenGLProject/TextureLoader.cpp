@@ -34,6 +34,4 @@ GLuint TextureLoader::getTextureID(std::string textFileName) {
 	stbi_image_free(image);
 
 	return mtexture;
-
-	return 1;
 }
