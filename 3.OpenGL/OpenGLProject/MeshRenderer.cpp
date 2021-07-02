@@ -33,6 +33,8 @@ MeshRenderer::MeshRenderer(MeshType modelType, Camera* _camera) {
 	glBindVertexArray(0);
 }
 
+MeshRenderer::~MeshRenderer() {}
+
 void MeshRenderer::draw() {
 	glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0f), position);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
@@ -59,3 +61,9 @@ void MeshRenderer::draw() {
 
 	glBindVertexArray(0);
 }
+
+// setters
+void MeshRenderer::setTexture(GLuint textureID) { texture = textureID; }
+void MeshRenderer::setScale(glm::vec3 _scale) { this->scale = _scale; }
+void MeshRenderer::setPosition(glm::vec3 _position) { this->position = _position; }
+void MeshRenderer::setProgram(GLuint _program) { this->setProgram = program; }
