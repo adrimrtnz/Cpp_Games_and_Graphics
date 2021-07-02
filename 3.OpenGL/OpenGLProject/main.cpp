@@ -62,7 +62,7 @@ void initGame() {
 	GLuint flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
 
 	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 4.0f, 6.0f));
-	light = new LightRenderer(MeshType::kTriangle, camera);
+	light = new LightRenderer(MeshType::kCube, camera);
 	light->setProgram(flatShaderProgram);
 	light->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 }
