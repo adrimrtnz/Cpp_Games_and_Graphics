@@ -75,7 +75,7 @@ void initGame() {
 
 	TextureLoader tLoader;
 
-	GLuint sphereTexture = tLoader.getTextureID("Assets/Textures/tennisBall.jpg");
+	GLuint sphereTexture = tLoader.getTextureID("Assets/Textures/balldimpled.png");
 
 	// sphere Mesh
 	sphere = new MeshRenderer(MeshType::kSphere, camera);
