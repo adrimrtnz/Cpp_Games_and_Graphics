@@ -9,10 +9,15 @@
 #include "MeshRenderer.h"
 #include "TextureLoader.h"
 
+// bullet physics library
+#include <btBulletDynamicsCommon.h>
+
 Camera* camera;
 LightRenderer* light;
 
 MeshRenderer* sphere;
+
+btDiscreteDynamicsWorld* dynamicsWorld;
 
 // camera and screen attributes
 const int WIDTH = 800;
@@ -20,6 +25,8 @@ const int HEIGTH = 600;
 const float FOV = 45.0f;
 const float NEAR_PLANE = 0.1f;
 const float FAR_PLANE = 100.0f;
+
+const float GRAVITY_ACCELERATION = -9.8f;
 
 // functions prototypes
 void renderScene();
@@ -76,6 +83,16 @@ void initGame() {
 	TextureLoader tLoader;
 
 	GLuint sphereTexture = tLoader.getTextureID("Assets/Textures/balldimpled.png");
+
+	// init physics
+	btBroadphaseInterface* bradphase = new btDbvtBroadphase();
+	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver();
+
+	// create a new dynamicWorld
+	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, bradphase, solver, collisionConfiguration);
+	dynamicsWorld->setGravity(btVector3(0, GRAVITY_ACCELERATION, 0));
 
 	// sphere Mesh
 	sphere = new MeshRenderer(MeshType::kSphere, camera);
