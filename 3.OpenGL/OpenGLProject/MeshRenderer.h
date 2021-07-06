@@ -10,12 +10,11 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-#include <btBulletDynamicsCommon.h>
 
 class MeshRenderer {
 
 public:
-	MeshRenderer(MeshType modelType, Camera* _camera, btRigidBody* _rigidBody);
+	MeshRenderer(MeshType modelType, Camera* _camera);
 	~MeshRenderer();
 
 	void draw();
@@ -34,6 +33,5 @@ private:
 
 	glm::vec3 position, scale;
 	GLuint vao, vbo, ebo, texture, program;
-	btRigidBody* rigidBody;
 };
 

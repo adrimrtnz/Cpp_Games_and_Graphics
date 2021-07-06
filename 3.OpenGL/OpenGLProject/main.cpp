@@ -1,5 +1,3 @@
-#include <chrono>
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -29,20 +27,11 @@ const float NEAR_PLANE = 0.1f;
 const float FAR_PLANE = 100.0f;
 
 const float GRAVITY_ACCELERATION = -9.8f;
-const float ROTATION = 0;
-const float RIGIDBODY_DISTANCE = 10.0f;
-
-// ball object attributes
-float sphereMass = 10.0;
-float sphereRestitution = 1.0f;
-float sphereFriction = 1.0f;
-
 
 // functions prototypes
 void renderScene();
 void initGame();
 static void glfwError(int id, const char* description);
-//void addRigidBodies();
 
 int main(int argc, char** argv) {
 	
@@ -56,14 +45,8 @@ int main(int argc, char** argv) {
 	glewInit();
 	initGame();
 
-	auto previousTime = std::chrono::high_resolution_clock::now();
-
 	// keep the window working until it's close
 	while (!glfwWindowShouldClose(window)) {
-
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		float dt = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - previousTime).count();
-		dynamicsWorld->stepSimulation(dt);
 
 		// render the scene
 		renderScene();
@@ -71,7 +54,6 @@ int main(int argc, char** argv) {
 		glfwSwapBuffers(window);			// the display buffer is where the current frame is rendered and stored
 		glfwPollEvents();
 
-		previousTime = currentTime;
 	}
 
 	glfwTerminate();
@@ -92,7 +74,7 @@ void initGame() {
 	GLuint flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
 	GLuint texturedShaderProgram = shader.createProgram("Assets/Shaders/TexturedModel.vs", "Assets/Shaders/TexturedModel.fs");
 	
-	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 4.0f, 20.0f));
+	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 4.0f, 6.0f));
 	
 	light = new LightRenderer(MeshType::kCube, camera);
 	light->setProgram(flatShaderProgram);
@@ -112,47 +94,13 @@ void initGame() {
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, bradphase, solver, collisionConfiguration);
 	dynamicsWorld->setGravity(btVector3(0, GRAVITY_ACCELERATION, 0));
 
-	// to be moved
-	btCollisionShape* sphereShape = new btSphereShape(1.0f);
-	btDefaultMotionState* sphereMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(ROTATION, RIGIDBODY_DISTANCE, 0)));
-
-	btScalar mass = sphereMass;
-	btVector3 sphereInertia(0, 0, 0);
-	sphereShape->calculateLocalInertia(mass, sphereInertia);
-
-	btRigidBody::btRigidBodyConstructionInfo sphereRigidBodyCI(mass, sphereMotionState, sphereShape, sphereInertia);
-	btRigidBody* sphereRigidBody = new btRigidBody(sphereRigidBodyCI);
-	sphereRigidBody->setRestitution(sphereRestitution);
-	sphereRigidBody->setFriction(sphereFriction);
-
-	dynamicsWorld->addRigidBody(sphereRigidBody);
-
 	// sphere Mesh
-	sphere = new MeshRenderer(MeshType::kSphere, camera, sphereRigidBody);
+	sphere = new MeshRenderer(MeshType::kSphere, camera);
 	sphere->setProgram(texturedShaderProgram);
 	sphere->setTexture(sphereTexture);
+	sphere->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	sphere->setScale(glm::vec3(1.0f));
-	// end of "to be moved"
 }
-
-/*
-void addRigidBodies() {
-	
-	btCollisionShape* sphereShape = new btSphereShape(1.0f);
-	btDefaultMotionState* sphereMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(ROTATION, RIGIDBODY_DISTANCE, 0)));
-
-	btScalar mass = sphereMass;
-	btVector3 sphereInertia(0, 0, 0);
-	sphereShape->calculateLocalInertia(mass, sphereInertia);
-
-	btRigidBody::btRigidBodyConstructionInfo sphereRigidBodyCI(mass, sphereMotionState, sphereShape, sphereInertia);
-	btRigidBody* sphereRigidBody = new btRigidBody(sphereRigidBodyCI);
-	sphereRigidBody->setRestitution(sphereRestitution);
-	sphereRigidBody->setFriction(sphereFriction);
-
-	dynamicsWorld->addRigidBody(sphereRigidBody);
-}
-*/
 
 void renderScene() {
 
