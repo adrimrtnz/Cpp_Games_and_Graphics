@@ -18,6 +18,7 @@ Camera* camera;
 LightRenderer* light;
 
 MeshRenderer* sphere;
+MeshRenderer* ground;
 
 btDiscreteDynamicsWorld* dynamicsWorld;
 
@@ -36,6 +37,10 @@ const float RIGIDBODY_DISTANCE = 10.0f;
 float sphereMass = 10.0;
 float sphereRestitution = 1.0f;
 float sphereFriction = 1.0f;
+
+// ground object attributes
+float groundFriction = 1.0f;
+float groundRestitution = 0.9f;
 
 
 // functions prototypes
@@ -132,7 +137,28 @@ void initGame() {
 	sphere->setProgram(texturedShaderProgram);
 	sphere->setTexture(sphereTexture);
 	sphere->setScale(glm::vec3(1.0f));
-	// end of "to be moved"
+
+	// ground platform RigidBody
+	btCollisionShape* groundShape = new btBoxShape(btVector3(4.0f, 0.5f, 4.0f));
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -2.0f, 0)));
+	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0.0f, new btDefaultMotionState(), groundShape, btVector3(0, 0, 0));
+
+	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+	groundRigidBody->setFriction(groundFriction);
+	groundRigidBody->setRestitution(groundRestitution);
+	groundRigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
+
+	dynamicsWorld->addRigidBody(groundRigidBody);
+
+	// ground platform Mesh
+	GLuint groundTexture = tLoader.getTextureID("Assets/Textures/ground.jpg");
+	ground = new MeshRenderer(MeshType::kCube, camera, groundRigidBody);
+	ground->setProgram(texturedShaderProgram);
+	ground->setTexture(groundTexture);
+	ground->setScale(glm::vec3(10.0f, 0.0f, 7.0f));
+
+
+	// end of "to be moved
 }
 
 /*
@@ -162,6 +188,7 @@ void renderScene() {
 	// Draw game objects here
 	//light->draw();
 	sphere->draw();
+	ground->draw();
 }
 
 static void glfwError(int id, const char* description) {
