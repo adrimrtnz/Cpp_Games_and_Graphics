@@ -19,8 +19,13 @@ LightRenderer* light;
 
 MeshRenderer* sphere;
 MeshRenderer* ground;
+MeshRenderer* enemy;
 
 btDiscreteDynamicsWorld* dynamicsWorld;
+
+GLuint flatShaderProgram;
+GLuint texturedShaderProgram;
+GLuint sphereTexture, enemyTexture, groundTexture;
 
 // camera and screen attributes
 const int WIDTH = 800;
@@ -38,6 +43,10 @@ float sphereMass = 10.0;
 float sphereRestitution = 1.0f;
 float sphereFriction = 1.0f;
 
+// enemy object attributes
+float enemyRestitution = 0.0f;
+float enemyFriction = 1.0f;
+
 // ground object attributes
 float groundFriction = 1.0f;
 float groundRestitution = 0.9f;
@@ -47,7 +56,8 @@ float groundRestitution = 0.9f;
 void renderScene();
 void initGame();
 static void glfwError(int id, const char* description);
-//void addRigidBodies();
+void addRigidBodies();
+void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep);
 
 int main(int argc, char** argv) {
 	
@@ -94,8 +104,8 @@ void initGame() {
 
 	ShaderLoader shader;
 
-	GLuint flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
-	GLuint texturedShaderProgram = shader.createProgram("Assets/Shaders/TexturedModel.vs", "Assets/Shaders/TexturedModel.fs");
+	flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
+	texturedShaderProgram = shader.createProgram("Assets/Shaders/TexturedModel.vs", "Assets/Shaders/TexturedModel.fs");
 	
 	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 4.0f, 20.0f));
 	
@@ -105,7 +115,9 @@ void initGame() {
 
 	TextureLoader tLoader;
 
-	GLuint sphereTexture = tLoader.getTextureID("Assets/Textures/balldimpled.png");
+	sphereTexture = tLoader.getTextureID("Assets/Textures/balldimpled.png");
+	groundTexture = tLoader.getTextureID("Assets/Textures/ground.jpg");
+	enemyTexture = tLoader.getTextureID("Assets/Textures/tennisBall.jpg");
 
 	// init physics
 	btBroadphaseInterface* bradphase = new btDbvtBroadphase();
@@ -116,52 +128,11 @@ void initGame() {
 	// create a new dynamicWorld
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, bradphase, solver, collisionConfiguration);
 	dynamicsWorld->setGravity(btVector3(0, GRAVITY_ACCELERATION, 0));
+	dynamicsWorld->setInternalTickCallback(myTickCallBack);
 
-	// to be moved
-	btCollisionShape* sphereShape = new btSphereShape(1.0f);
-	btDefaultMotionState* sphereMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(ROTATION, RIGIDBODY_DISTANCE, 0)));
-
-	btScalar mass = sphereMass;
-	btVector3 sphereInertia(0, 0, 0);
-	sphereShape->calculateLocalInertia(mass, sphereInertia);
-
-	btRigidBody::btRigidBodyConstructionInfo sphereRigidBodyCI(mass, sphereMotionState, sphereShape, sphereInertia);
-	btRigidBody* sphereRigidBody = new btRigidBody(sphereRigidBodyCI);
-	sphereRigidBody->setRestitution(sphereRestitution);
-	sphereRigidBody->setFriction(sphereFriction);
-
-	dynamicsWorld->addRigidBody(sphereRigidBody);
-
-	// sphere Mesh
-	sphere = new MeshRenderer(MeshType::kSphere, camera, sphereRigidBody);
-	sphere->setProgram(texturedShaderProgram);
-	sphere->setTexture(sphereTexture);
-	sphere->setScale(glm::vec3(1.0f));
-
-	// ground platform RigidBody
-	btCollisionShape* groundShape = new btBoxShape(btVector3(4.0f, 0.5f, 4.0f));
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -2.0f, 0)));
-	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0.0f, new btDefaultMotionState(), groundShape, btVector3(0, 0, 0));
-
-	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	groundRigidBody->setFriction(groundFriction);
-	groundRigidBody->setRestitution(groundRestitution);
-	groundRigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
-
-	dynamicsWorld->addRigidBody(groundRigidBody);
-
-	// ground platform Mesh
-	GLuint groundTexture = tLoader.getTextureID("Assets/Textures/ground.jpg");
-	ground = new MeshRenderer(MeshType::kCube, camera, groundRigidBody);
-	ground->setProgram(texturedShaderProgram);
-	ground->setTexture(groundTexture);
-	ground->setScale(glm::vec3(10.0f, 0.0f, 7.0f));
-
-
-	// end of "to be moved
+	addRigidBodies();
 }
 
-/*
 void addRigidBodies() {
 	
 	btCollisionShape* sphereShape = new btSphereShape(1.0f);
@@ -176,9 +147,58 @@ void addRigidBodies() {
 	sphereRigidBody->setRestitution(sphereRestitution);
 	sphereRigidBody->setFriction(sphereFriction);
 
+	sphereRigidBody->setActivationState(DISABLE_DEACTIVATION);
+
 	dynamicsWorld->addRigidBody(sphereRigidBody);
+
+	// sphere Mesh
+	sphere = new MeshRenderer(MeshType::kSphere, "hero", camera, sphereRigidBody);
+	sphere->setProgram(texturedShaderProgram);
+	sphere->setTexture(sphereTexture);
+	sphere->setScale(glm::vec3(1.0f));
+
+	sphereRigidBody->setUserPointer(sphere);
+
+	// ground platform RigidBody
+	btCollisionShape* groundShape = new btBoxShape(btVector3(4.0f, 0.5f, 4.0f));
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -2.0f, 0)));
+	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0.0f, new btDefaultMotionState(), groundShape, btVector3(0, 0, 0));
+
+	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+	groundRigidBody->setFriction(groundFriction);
+	groundRigidBody->setRestitution(groundRestitution);
+	groundRigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
+
+	dynamicsWorld->addRigidBody(groundRigidBody);
+
+	// ground platform Mesh
+	ground = new MeshRenderer(MeshType::kCube, "ground", camera, groundRigidBody);
+	ground->setProgram(texturedShaderProgram);
+	ground->setTexture(groundTexture);
+	ground->setScale(glm::vec3(10.0f, 0.0f, 7.0f));
+
+	// Enemy RigidBody
+	btCollisionShape* shape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(18.0f, 1.0f, 0)));
+	btRigidBody::btRigidBodyConstructionInfo rbCI(0.0f, motionState, shape, btVector3(0.0f, 0.0f, 0.0f));
+
+	btRigidBody* rb = new btRigidBody(rbCI);
+	rb->setFriction(enemyFriction);
+	rb->setRestitution(enemyRestitution);
+
+	//rb->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+	rb->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+
+	dynamicsWorld->addRigidBody(rb);
+
+	// Enemy Mesh
+	enemy = new MeshRenderer(MeshType::kSphere, "enemy", camera, rb);
+	enemy->setProgram(texturedShaderProgram);
+	enemy->setTexture(enemyTexture);
+	enemy->setScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	rb->setUserPointer(enemy);
 }
-*/
 
 void renderScene() {
 
@@ -189,6 +209,24 @@ void renderScene() {
 	//light->draw();
 	sphere->draw();
 	ground->draw();
+	enemy->draw();
+}
+
+void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
+	
+	// Get enemy transform
+	btTransform t(enemy->rigidBody->getWorldTransform());
+
+	// Set enemy position
+	t.setOrigin(t.getOrigin() + btVector3(-15, 0, 0) * timeStep);
+
+	// Check if offScreen
+	if (t.getOrigin().x() <= -18.f) {
+		t.setOrigin(btVector3(18, 1, 0));
+	}
+	
+	enemy->rigidBody->setWorldTransform(t);
+	enemy->rigidBody->getMotionState()->setWorldTransform(t);
 }
 
 static void glfwError(int id, const char* description) {

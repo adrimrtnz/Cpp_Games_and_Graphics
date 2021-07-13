@@ -1,7 +1,8 @@
 #include "MeshRenderer.h"
 
-MeshRenderer::MeshRenderer(MeshType modelType, Camera* _camera, btRigidBody* _rigidBody) {
+MeshRenderer::MeshRenderer(MeshType modelType, std::string _name,Camera* _camera, btRigidBody* _rigidBody) {
 	
+	name = _name;
 	camera = _camera;
 	rigidBody = _rigidBody;
 

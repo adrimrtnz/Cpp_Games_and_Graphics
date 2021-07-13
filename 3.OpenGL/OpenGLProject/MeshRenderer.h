@@ -15,7 +15,7 @@
 class MeshRenderer {
 
 public:
-	MeshRenderer(MeshType modelType, Camera* _camera, btRigidBody* _rigidBody);
+	MeshRenderer(MeshType modelType, std::string _name, Camera* _camera, btRigidBody* _rigidBody);
 	~MeshRenderer();
 
 	void draw();
@@ -24,6 +24,9 @@ public:
 	void setScale(glm::vec3 _scale);
 	void setProgram(GLuint _program);
 	void setTexture(GLuint _textureID);
+
+	btRigidBody* rigidBody;
+	std::string name = "";
 
 private:
 	std::vector<Vertex>vertices;
@@ -34,6 +37,6 @@ private:
 
 	glm::vec3 position, scale;
 	GLuint vao, vbo, ebo, texture, program;
-	btRigidBody* rigidBody;
+	
 };
 
