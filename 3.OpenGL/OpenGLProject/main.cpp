@@ -177,6 +177,8 @@ void addRigidBodies() {
 	ground->setTexture(groundTexture);
 	ground->setScale(glm::vec3(10.0f, 0.0f, 7.0f));
 
+	groundRigidBody->setUserPointer(ground);
+
 	// Enemy RigidBody
 	btCollisionShape* shape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
 	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(18.0f, 1.0f, 0)));
@@ -227,6 +229,53 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 	
 	enemy->rigidBody->setWorldTransform(t);
 	enemy->rigidBody->getMotionState()->setWorldTransform(t);
+
+	// Check for collisions
+	int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+
+	for (int i = 0; i < numManifolds; i++) {
+		
+		btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+
+		int numContacts = contactManifold->getNumContacts();
+
+		if (numContacts > 0) {
+
+			const btCollisionObject *OBJ_A = contactManifold->getBody0();
+			const btCollisionObject *OBJ_B = contactManifold->getBody1();
+
+			MeshRenderer* gModA = (MeshRenderer*)OBJ_A->getUserPointer();
+			MeshRenderer* gModB = (MeshRenderer*)OBJ_B->getUserPointer();
+
+			//printf("gModA: %s, gModB %s \n", gModA->name, gModB->name);
+
+			if ((gModA->name == "hero" && gModB->name == "enemy") ||
+				(gModA->name == "enemy" && gModB->name == "hero")) {
+
+				printf("Collision: %s with %s \n", gModA->name, gModB->name);
+
+				if (gModB->name == "enemy") {
+					btTransform b(gModB->rigidBody->getWorldTransform());
+					b.setOrigin(btVector3(18, 1, 0));
+					gModB->rigidBody->setWorldTransform(b);
+					gModB->rigidBody->getMotionState()->setWorldTransform(b);
+				}
+				else {
+					btTransform a(gModA->rigidBody->getWorldTransform());
+					a.setOrigin(btVector3(18, 1, 0));
+					gModA->rigidBody->setWorldTransform(a);
+					gModA->rigidBody->getMotionState()->setWorldTransform(a);
+				}
+
+
+				if ((gModA->name == "hero" && gModB->name == "ground") ||
+					(gModA->name == "ground" && gModB->name == "hero")) {
+
+					printf("Collision: %s with %s \n", gModA->name, gModB->name);
+				}
+			}
+		}
+	}
 }
 
 static void glfwError(int id, const char* description) {
