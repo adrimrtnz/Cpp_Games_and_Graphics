@@ -27,6 +27,10 @@ GLuint flatShaderProgram;
 GLuint texturedShaderProgram;
 GLuint sphereTexture, enemyTexture, groundTexture;
 
+bool grounded = false;
+bool gameover = true;
+int score = 0;
+
 // camera and screen attributes
 const int WIDTH = 800;
 const int HEIGTH = 600;
@@ -43,7 +47,6 @@ const float JUMP_FORCE = 100.0f;
 float sphereMass = 10.0;
 float sphereRestitution = 1.0f;
 float sphereFriction = 1.0f;
-bool grounded = false;
 
 // enemy object attributes
 float enemyRestitution = 0.0f;
@@ -221,19 +224,23 @@ void renderScene() {
 
 void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 	
-	// Get enemy transform
-	btTransform t(enemy->rigidBody->getWorldTransform());
+	if (!gameover) {
+		// Get enemy transform
+		btTransform t(enemy->rigidBody->getWorldTransform());
 
-	// Set enemy position
-	t.setOrigin(t.getOrigin() + btVector3(-15, 0, 0) * timeStep);
+		// Set enemy position
+		t.setOrigin(t.getOrigin() + btVector3(-15, 0, 0) * timeStep);
 
-	// Check if offScreen
-	if (t.getOrigin().x() <= -18.f) {
-		t.setOrigin(btVector3(18, 1, 0));
+		// Check if offScreen
+		if (t.getOrigin().x() <= -18.f) {
+			t.setOrigin(btVector3(18, 1, 0));
+			score++;
+			printf("Score: %s", std::to_string(score));
+		}
+
+		enemy->rigidBody->setWorldTransform(t);
+		enemy->rigidBody->getMotionState()->setWorldTransform(t);
 	}
-	
-	enemy->rigidBody->setWorldTransform(t);
-	enemy->rigidBody->getMotionState()->setWorldTransform(t);
 
 	grounded = false;
 
@@ -273,6 +280,9 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 					gModA->rigidBody->setWorldTransform(a);
 					gModA->rigidBody->getMotionState()->setWorldTransform(a);
 				}
+
+				gameover = true;
+				score = 0;
 			}
 
 			if ((gModA->name == "hero" && gModB->name == "ground") ||
@@ -291,10 +301,16 @@ void updateKeyboard(GLFWwindow* window, int key, int scancode, int action, int m
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-		if (grounded == true) {
-			grounded = false;
-			sphere->rigidBody->applyImpulse(btVector3(0.0f, JUMP_FORCE, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
-			printf("pressed up key \n");
+
+		if (gameover) {
+			gameover = false;
+		}
+		else {
+			if (grounded == true) {
+				grounded = false;
+				sphere->rigidBody->applyImpulse(btVector3(0.0f, JUMP_FORCE, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
+				printf("pressed up key \n");
+			}
 		}
 	}
 }
