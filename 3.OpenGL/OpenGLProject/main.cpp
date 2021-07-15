@@ -39,9 +39,11 @@ const float ROTATION = 0;
 const float RIGIDBODY_DISTANCE = 10.0f;
 
 // ball object attributes
+const float JUMP_FORCE = 100.0f;
 float sphereMass = 10.0;
 float sphereRestitution = 1.0f;
 float sphereFriction = 1.0f;
+bool grounded = false;
 
 // enemy object attributes
 float enemyRestitution = 0.0f;
@@ -58,6 +60,7 @@ void initGame();
 static void glfwError(int id, const char* description);
 void addRigidBodies();
 void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep);
+void updateKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 int main(int argc, char** argv) {
 	
@@ -68,6 +71,8 @@ int main(int argc, char** argv) {
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGTH, "OpenGL first steps", NULL, NULL);
 	
 	glfwMakeContextCurrent(window);
+	glfwSetKeyCallback(window, updateKeyboard);
+
 	glewInit();
 	initGame();
 
@@ -230,6 +235,8 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 	enemy->rigidBody->setWorldTransform(t);
 	enemy->rigidBody->getMotionState()->setWorldTransform(t);
 
+	grounded = false;
+
 	// Check for collisions
 	int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
 
@@ -247,7 +254,7 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 			MeshRenderer* gModA = (MeshRenderer*)OBJ_A->getUserPointer();
 			MeshRenderer* gModB = (MeshRenderer*)OBJ_B->getUserPointer();
 
-			//printf("gModA: %s, gModB %s \n", gModA->name, gModB->name);
+			//printf("gModA: %s, gModB: %s \n", gModA->name, gModB->name);
 
 			if ((gModA->name == "hero" && gModB->name == "enemy") ||
 				(gModA->name == "enemy" && gModB->name == "hero")) {
@@ -266,14 +273,28 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 					gModA->rigidBody->setWorldTransform(a);
 					gModA->rigidBody->getMotionState()->setWorldTransform(a);
 				}
-
-
-				if ((gModA->name == "hero" && gModB->name == "ground") ||
-					(gModA->name == "ground" && gModB->name == "hero")) {
-
-					printf("Collision: %s with %s \n", gModA->name, gModB->name);
-				}
 			}
+
+			if ((gModA->name == "hero" && gModB->name == "ground") ||
+				(gModA->name == "ground" && gModB->name == "hero")) {
+
+				grounded = true;
+				printf("Collision: %s with %s \n", gModA->name, gModB->name);
+			}
+		}
+	}
+}
+
+void updateKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, true);
+	}
+	if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+		if (grounded == true) {
+			grounded = false;
+			sphere->rigidBody->applyImpulse(btVector3(0.0f, JUMP_FORCE, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
+			printf("pressed up key \n");
 		}
 	}
 }
