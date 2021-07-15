@@ -24,6 +24,9 @@ glew-2.1.0/*
 # Bullet Physics libraries
 bullet/*
 
+# Freetype libraries
+freetype/*
+
 # SFML
 /2.SFML_2D/SFMLProject/SFML-2.5.1/*
 /2.SFML_2D/SFMLProject/Assets/*
