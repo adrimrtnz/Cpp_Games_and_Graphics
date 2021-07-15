@@ -235,7 +235,7 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 		if (t.getOrigin().x() <= -18.f) {
 			t.setOrigin(btVector3(18, 1, 0));
 			score++;
-			printf("Score: %s", std::to_string(score));
+			printf("Score: %s\n", std::to_string(score));
 		}
 
 		enemy->rigidBody->setWorldTransform(t);
