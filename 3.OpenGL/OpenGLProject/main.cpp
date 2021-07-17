@@ -10,6 +10,7 @@
 #include "LightRenderer.h"
 #include "MeshRenderer.h"
 #include "TextureLoader.h"
+#include "TextRenderer.h"
 
 // bullet physics library
 #include <btBulletDynamicsCommon.h>
@@ -21,10 +22,12 @@ MeshRenderer* sphere;
 MeshRenderer* ground;
 MeshRenderer* enemy;
 
+TextRenderer* label;
+
 btDiscreteDynamicsWorld* dynamicsWorld;
 
 GLuint flatShaderProgram;
-GLuint texturedShaderProgram;
+GLuint texturedShaderProgram, textProgram;
 GLuint sphereTexture, enemyTexture, groundTexture;
 
 bool grounded = false;
@@ -114,6 +117,7 @@ void initGame() {
 
 	flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
 	texturedShaderProgram = shader.createProgram("Assets/Shaders/TexturedModel.vs", "Assets/Shaders/TexturedModel.fs");
+	textProgram = shader.createProgram("Assets/Shaders/text.vs", "Assets/Shaders/text.fs");
 	
 	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 4.0f, 20.0f));
 	
@@ -126,6 +130,9 @@ void initGame() {
 	sphereTexture = tLoader.getTextureID("Assets/Textures/balldimpled.png");
 	groundTexture = tLoader.getTextureID("Assets/Textures/ground.jpg");
 	enemyTexture = tLoader.getTextureID("Assets/Textures/tennisBall.jpg");
+
+	label = new TextRenderer("Score: 0", "Assets/fonts/gogono.ttf", 64, glm::vec3(1.0f, 0.0f, 0.0f), textProgram);
+	label->setPosition(glm::vec2(320.0f, 500.0f));
 
 	// init physics
 	btBroadphaseInterface* bradphase = new btDbvtBroadphase();
@@ -220,6 +227,7 @@ void renderScene() {
 	sphere->draw();
 	ground->draw();
 	enemy->draw();
+	label->draw();
 }
 
 void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
@@ -235,7 +243,7 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 		if (t.getOrigin().x() <= -18.f) {
 			t.setOrigin(btVector3(18, 1, 0));
 			score++;
-			printf("Score: %s\n", std::to_string(score));
+			label->setText("Score: " + std::to_string(score));
 		}
 
 		enemy->rigidBody->setWorldTransform(t);
@@ -266,7 +274,7 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 			if ((gModA->name == "hero" && gModB->name == "enemy") ||
 				(gModA->name == "enemy" && gModB->name == "hero")) {
 
-				printf("Collision: %s with %s \n", gModA->name, gModB->name);
+				//printf("Collision: %s with %s \n", gModA->name, gModB->name);
 
 				if (gModB->name == "enemy") {
 					btTransform b(gModB->rigidBody->getWorldTransform());
@@ -283,13 +291,14 @@ void myTickCallBack(btDynamicsWorld* dynamicsWorld, btScalar timeStep) {
 
 				gameover = true;
 				score = 0;
+				label->setText("Score: " + std::to_string(score));
 			}
 
 			if ((gModA->name == "hero" && gModB->name == "ground") ||
 				(gModA->name == "ground" && gModB->name == "hero")) {
 
 				grounded = true;
-				printf("Collision: %s with %s \n", gModA->name, gModB->name);
+				//printf("Collision: %s with %s \n", gModA->name, gModB->name);
 			}
 		}
 	}
