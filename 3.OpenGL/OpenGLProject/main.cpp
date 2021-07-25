@@ -29,6 +29,7 @@ btDiscreteDynamicsWorld* dynamicsWorld;
 GLuint flatShaderProgram;
 GLuint texturedShaderProgram, textProgram;
 GLuint sphereTexture, enemyTexture, groundTexture;
+GLuint litTexturedShaderProgram;
 
 bool grounded = false;
 bool gameover = true;
@@ -118,12 +119,14 @@ void initGame() {
 	flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
 	texturedShaderProgram = shader.createProgram("Assets/Shaders/TexturedModel.vs", "Assets/Shaders/TexturedModel.fs");
 	textProgram = shader.createProgram("Assets/Shaders/text.vs", "Assets/Shaders/text.fs");
+	litTexturedShaderProgram = shader.createProgram("Assets/Shaders/LitTextureModel.vs", "Assets/Shaders/LitTextureModel.fs");
 	
 	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 4.0f, 20.0f));
 	
-	light = new LightRenderer(MeshType::kCube, camera);
+	light = new LightRenderer(MeshType::kSphere, camera);
 	light->setProgram(flatShaderProgram);
-	light->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	light->setPosition(glm::vec3(0.0f, 10.0f, 0.0f));
+	light->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
 
 	TextureLoader tLoader;
 
@@ -167,8 +170,8 @@ void addRigidBodies() {
 	dynamicsWorld->addRigidBody(sphereRigidBody);
 
 	// sphere Mesh
-	sphere = new MeshRenderer(MeshType::kSphere, "hero", camera, sphereRigidBody);
-	sphere->setProgram(texturedShaderProgram);
+	sphere = new MeshRenderer(MeshType::kSphere, "hero", camera, sphereRigidBody, light, 0.1f, 0.5f);
+	sphere->setProgram(litTexturedShaderProgram);
 	sphere->setTexture(sphereTexture);
 	sphere->setScale(glm::vec3(1.0f));
 
@@ -187,8 +190,8 @@ void addRigidBodies() {
 	dynamicsWorld->addRigidBody(groundRigidBody);
 
 	// ground platform Mesh
-	ground = new MeshRenderer(MeshType::kCube, "ground", camera, groundRigidBody);
-	ground->setProgram(texturedShaderProgram);
+	ground = new MeshRenderer(MeshType::kCube, "ground", camera, groundRigidBody, light, 0.1f, 0.5f);
+	ground->setProgram(litTexturedShaderProgram);
 	ground->setTexture(groundTexture);
 	ground->setScale(glm::vec3(10.0f, 0.0f, 7.0f));
 
@@ -209,8 +212,8 @@ void addRigidBodies() {
 	dynamicsWorld->addRigidBody(rb);
 
 	// Enemy Mesh
-	enemy = new MeshRenderer(MeshType::kSphere, "enemy", camera, rb);
-	enemy->setProgram(texturedShaderProgram);
+	enemy = new MeshRenderer(MeshType::kSphere, "enemy", camera, rb, light, 0.1f, 0.5f);
+	enemy->setProgram(litTexturedShaderProgram);
 	enemy->setTexture(enemyTexture);
 	enemy->setScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -223,7 +226,7 @@ void renderScene() {
 	glClearColor(38/255.0, 38/255.0, 39/255.0, 1.0);	// RGBA between 0.0 and 1.0
 
 	// Draw game objects here
-	//light->draw();
+	light->draw();
 	sphere->draw();
 	ground->draw();
 	enemy->draw();

@@ -1,10 +1,14 @@
 #include "MeshRenderer.h"
 
-MeshRenderer::MeshRenderer(MeshType modelType, std::string _name,Camera* _camera, btRigidBody* _rigidBody) {
+MeshRenderer::MeshRenderer(MeshType modelType, std::string _name, Camera* _camera, btRigidBody* _rigidBody, LightRenderer* _light, float _specularStrength, float _ambientStrength) {
 	
 	name = _name;
 	camera = _camera;
 	rigidBody = _rigidBody;
+	camera = _camera;
+	light = _light;
+	ambientStrength = _ambientStrength;
+	specularStrength = _specularStrength;
 
 	scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	position = glm::vec3(0.0, 0.0, 0.0);
@@ -32,6 +36,9 @@ MeshRenderer::MeshRenderer(MeshType modelType, std::string _name,Camera* _camera
 
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Vertex::textCoords)));
+
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Vertex::normal)));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -83,6 +90,25 @@ void MeshRenderer::draw() {
 
 	// texture binding: 1st parameter = 2d texture, 2nd parameter = texture ID
 	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// Set Texture
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// Set Lighting
+	GLuint cameraPosLoc = glGetUniformLocation(program, "cameraPos");
+	glUniform3f(cameraPosLoc, camera->getCameraPosition().x, camera->getCameraPosition().y, camera->getCameraPosition().z);
+
+	GLuint lightPosLoc = glGetUniformLocation(program, "lightPos");
+	glUniform3f(lightPosLoc, this->light->getPosition().x, this->light->getPosition().y, this->light->getPosition().z);
+
+	GLuint lightColorLoc = glGetUniformLocation(program, "lightColor");
+	glUniform3f(lightPosLoc, this->light->getColor().x, this->light->getColor().y, this->light->getColor().z);
+
+	GLuint specularStrengthLoc = glGetUniformLocation(program, "specularStrength");
+	glUniform1f(specularStrengthLoc, specularStrength);
+
+	GLuint ambientStrengthLoc = glGetUniformLocation(program, "ambientStrength");
+	glUniform1f(ambientStrengthLoc, ambientStrength);
 
 	// vao binding and draws the object
 	glBindVertexArray(vao);
