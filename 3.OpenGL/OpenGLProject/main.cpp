@@ -119,7 +119,7 @@ void initGame() {
 	flatShaderProgram = shader.createProgram("Assets/Shaders/FlatModel.vs", "Assets/Shaders/FlatModel.fs");
 	texturedShaderProgram = shader.createProgram("Assets/Shaders/TexturedModel.vs", "Assets/Shaders/TexturedModel.fs");
 	textProgram = shader.createProgram("Assets/Shaders/text.vs", "Assets/Shaders/text.fs");
-	litTexturedShaderProgram = shader.createProgram("Assets/Shaders/LitTextureModel.vs", "Assets/Shaders/LitTextureModel.fs");
+	litTexturedShaderProgram = shader.createProgram("Assets/Shaders/LitTexturedModel.vs", "Assets/Shaders/LitTexturedModel.fs");
 	
 	camera = new Camera(FOV, WIDTH, HEIGTH, NEAR_PLANE, FAR_PLANE, glm::vec3(0.0f, 4.0f, 20.0f));
 	

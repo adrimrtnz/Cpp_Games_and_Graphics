@@ -102,7 +102,7 @@ void MeshRenderer::draw() {
 	glUniform3f(lightPosLoc, this->light->getPosition().x, this->light->getPosition().y, this->light->getPosition().z);
 
 	GLuint lightColorLoc = glGetUniformLocation(program, "lightColor");
-	glUniform3f(lightPosLoc, this->light->getColor().x, this->light->getColor().y, this->light->getColor().z);
+	glUniform3f(lightColorLoc, this->light->getColor().x, this->light->getColor().y, this->light->getColor().z);
 
 	GLuint specularStrengthLoc = glGetUniformLocation(program, "specularStrength");
 	glUniform1f(specularStrengthLoc, specularStrength);

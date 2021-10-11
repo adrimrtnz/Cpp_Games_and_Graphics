@@ -69,7 +69,7 @@ void LightRenderer::draw() {
 LightRenderer::~LightRenderer() {}
 
 // class setters
-void LightRenderer::setPosition(glm::vec3 _position) { this->position = _position; }
+void LightRenderer::setPosition(glm::vec3 _position) { position = _position; }
 void LightRenderer::setColor(glm::vec3 _color) { this->color = _color; }
 void LightRenderer::setProgram(GLuint _program) { this->program = _program; }
 
