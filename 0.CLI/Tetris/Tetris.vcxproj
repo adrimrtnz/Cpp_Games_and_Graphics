@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{df85e8be-dc86-482b-a88f-d11bfdfadade}</ProjectGuid>
-    <RootNamespace>OpenGLProject</RootNamespace>
+    <ProjectGuid>{eae08ee3-0532-41da-be69-916f8a79aaed}</ProjectGuid>
+    <RootNamespace>Tetris</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -130,35 +130,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\adri_\Desktop\C++_Games_and_Graphics\freetype\include;C:\Users\adri_\Desktop\C++_Games_and_Graphics\bullet\include;C:\Users\adri_\Desktop\C++_Games_and_Graphics\stb-master;C:\Users\adri_\Desktop\C++_Games_and_Graphics\glm;C:\Users\adri_\Desktop\C++_Games_and_Graphics\glew-2.1.0\include;C:\Users\adri_\Desktop\C++_Games_and_Graphics\glfw-3.3.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\adri_\Desktop\C++_Games_and_Graphics\freetype\win64;C:\Users\adri_\Desktop\C++_Games_and_Graphics\bullet\lib\win64\Rls;C:\Users\adri_\Desktop\C++_Games_and_Graphics\glew-2.1.0\lib\Release\x64;C:\Users\adri_\Desktop\C++_Games_and_Graphics\glfw-3.3.3\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;opengl32.lib;glfw3.lib;glew32.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="LightRenderer.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshRenderer.cpp" />
-    <ClCompile Include="ShaderLoader.cpp" />
-    <ClCompile Include="TextRenderer.cpp" />
-    <ClCompile Include="TextureLoader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="LightRenderer.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshRenderer.h" />
-    <ClInclude Include="ShaderLoader.h" />
-    <ClInclude Include="TextRenderer.h" />
-    <ClInclude Include="TextureLoader.h" />
+    <ClCompile Include="Tetris.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
