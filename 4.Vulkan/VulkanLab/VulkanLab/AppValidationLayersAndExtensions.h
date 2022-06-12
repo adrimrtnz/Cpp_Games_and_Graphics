@@ -15,7 +15,7 @@ public:
 
 	const std::vector<const char*> requiredValidationLayers = { "VK_LAYER_LUNARG_standard_validation" };
 	bool checkValidationLayerSupport();
-	std::vector<const char*> getRequiredExtensions(bool isValdationLayersEnabled);
+	std::vector<const char*> getRequiredExtensions(bool isValidationLayersEnabled);
 
 	// Debug Callback
 	VkDebugReportCallbackEXT callback;
