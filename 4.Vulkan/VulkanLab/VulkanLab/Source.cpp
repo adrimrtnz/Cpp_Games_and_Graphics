@@ -1,10 +1,10 @@
-#define GFLW_INCLUDE_VULKAN
+#define GFLW_INCLUDE_VULKAN			// This must be added before including GLFW header
 #include <GLFW/glfw3.h>
 
-const int HEIGHT = 720;
-const int WIDTH = 1280;
+#include "Config.h"
 
-int main() {
+int main() 
+{
 
 	glfwInit();
 
@@ -13,7 +13,8 @@ int main() {
 
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan Project", nullptr, nullptr);
 
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window)) 
+	{
 		glfwPollEvents();
 	}
 
