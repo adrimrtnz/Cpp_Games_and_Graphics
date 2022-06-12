@@ -90,6 +90,6 @@ void AppValidationLayersAndExtensions::setupDebugCallback(bool isValidationLayer
 void AppValidationLayersAndExtensions::destroy(VkInstance instance, bool isValidationLayerEnabled)
 {
 	if (isValidationLayerEnabled) {
-		vkDestroyDebugReportCallbackEXT(instance, callback, nullptr);
+		//vkDestroyDebugReportCallbackEXT(instance, callback, nullptr);
 	}
 }
