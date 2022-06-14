@@ -3,7 +3,7 @@
 VulkanInstance::VulkanInstance() {}
 VulkanInstance::~VulkanInstance() {}
 
-void createAppAndVkInstance(bool enableValidationLayers, AppValidationLayersAndExtensions* valLayerAndExtendions) 
+void createAppAndVkInstance(bool enableValidationLayers, AppValidationLayersAndExtensions *valLayerAndExtendions)
 {
 	// Links the APP to the Vulkan Library
 	VkApplicationInfo appInfo = {};
@@ -17,4 +17,21 @@ void createAppAndVkInstance(bool enableValidationLayers, AppValidationLayersAndE
 	VkInstanceCreateInfo vkInstanceInfo = {};
 	vkInstanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	vkInstanceInfo.pApplicationInfo = &appInfo;
+
+	// specify extensions and validation layers
+	auto extensions = valLayerAndExtendions->getRequiredExtensions(enableValidationLayers);
+	vkInstanceInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+	vkInstanceInfo.ppEnabledExtensionNames = extensions.data();
+
+	if (enableValidationLayers) {
+		vkInstanceInfo.enabledLayerCount = static_cast<uint32_t>(valLayerAndExtendions->requiredValidationLayers.size());
+		vkInstanceInfo.ppEnabledExtensionNames = valLayerAndExtendions->requiredValidationLayers.data();
+	}
+	else {
+		vkInstanceInfo.enabledLayerCount = 0;
+	}
+
+	if (vkCreateInstance(&vkInstanceInfo, nullptr, &vkInstance)) {
+		throw std::runtime_error("Failed to create vkInstance. ");
+	}
 }

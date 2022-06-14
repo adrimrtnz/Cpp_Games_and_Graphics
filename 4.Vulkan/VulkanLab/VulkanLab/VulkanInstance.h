@@ -11,6 +11,6 @@ public:
 
 	VkInstance vkInstance;
 
-	void createAppAndVkInstance(bool enableValidationLayers, AppValidationLayersAndExtensions* valLayerAndExtendions);
+	void createAppAndVkInstance(bool enableValidationLayers, AppValidationLayersAndExtensions *valLayerAndExtendions);
 };
 
