@@ -9,6 +9,9 @@
 *.a
 *.lib
 
+# Compiled Objects
+*.o
+
 # GLM libraries
 glm/*
 */glm/*
