@@ -23,6 +23,7 @@ stb-master/*
 # OpenGL libraries
 glfw-3.3.3/*
 glew-2.1.0/*
+*/codebase/*
 
 # Bullet Physics libraries
 bullet/*
