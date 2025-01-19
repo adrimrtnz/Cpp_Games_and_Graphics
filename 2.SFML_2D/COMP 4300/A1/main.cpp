@@ -4,8 +4,12 @@
 
 #include <SFML/Graphics.hpp>
 
+void loadConfig(const std::string&);
+
 int main(int argc, char *argv[])
 {
+    // LoadConfig from file
+    loadConfig("./config.txt");
     // create a new window of size w*h pixels
     // top-left of the window is (0,0) and bottom-right is (w,h)
     // read this from the config file
@@ -58,6 +62,20 @@ int main(int argc, char *argv[])
 
         // basic animation
         circle.setPosition(circle.getPosition().x + circleSpeedX, circle.getPosition().y + circleSpeedY);
+        
+        if (circle.getPosition().x > wWidth - (circleRadius * 2)) {
+            circleSpeedX = -circleSpeedX;
+        }
+        else if (circle.getPosition().x < 0) {
+            circleSpeedX = -circleSpeedX;
+        }
+
+        if (circle.getPosition().y > wHeight - (circleRadius * 2)) {
+            circleSpeedY = -circleSpeedY;
+        }
+        else if (circle.getPosition().y < 0) {
+            circleSpeedY = -circleSpeedY;
+        }
 
         window.clear();
         if (drawCircle)
@@ -68,4 +86,35 @@ int main(int argc, char *argv[])
     }
 
     return 0;
+}
+
+
+void loadConfig(const std::string& filename) 
+{
+    std::ifstream fin(filename);
+    std::string className, fontFile, shapeName;
+    float width, height, initX, initY, iniSpeedX, iniSpeedY, fontSze, sizeW, sizeH, radius;
+    float r, g, b;
+
+    while (fin >> className) {
+        if (className == "Window") {
+            fin >> width >> height;
+            std::cout << "Window " << width << " " << height << std::endl;
+        }
+        else if (className == "Font") {
+            fin >> fontFile >> fontSze >> r >> g >> b;
+            std::cout << "Font " << fontFile << " " << fontSze << std::endl;
+        }
+        else if (className == "Rectangle") {
+            fin >> shapeName >> initX >> initY >> iniSpeedX >> iniSpeedY >> r >> g >> b >> sizeW >> sizeW;
+            std::cout << "Rectangle " << initX << " " << initY << std::endl;
+        }
+        else if (className == "Circle") {
+            fin >> shapeName >> initX >> initY >> iniSpeedX >> iniSpeedY >> r >> g >> b >> radius;
+            std::cout << "Circle " << initX << " " << initY << " " << r << " " << g << " " << b << std::endl;
+            sf::CircleShape circle(radius, 32);
+            circle.setFillColor(sf::Color(r, g, b));
+            circle.setPosition(initX, initY);
+        }
+    }
 }
